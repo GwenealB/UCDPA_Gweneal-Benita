@@ -3,3 +3,6 @@ venv/
 .vscode/
 
 ~$oject Report.docx
+*.tmp
+
+*/__pycache__/
