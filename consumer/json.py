@@ -1,3 +1,4 @@
 import pandas
-data = pandas.read_json('data/AB_NYC_2019.json')
 
+def consume(file:str):
+  return pandas.read_json(file)
