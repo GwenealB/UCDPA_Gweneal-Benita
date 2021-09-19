@@ -42,5 +42,3 @@ class SQLite:
     data = pandas.read_sql_query(f'SELECT * FROM {table_name}', conn)
     conn.close()
     return data
-
-conn= lambda x: x
