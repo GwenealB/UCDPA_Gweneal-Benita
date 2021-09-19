@@ -29,7 +29,7 @@ class AirbnbAnalyzer:
     room_type = self.data.groupby('room_type')['latitude'].count().reset_index()
     room_type.rename(columns={'latitude':'n_rooms'}, inplace=True)
     plot.figure(figsize=(10,8))
-    plot.pie(room_type['n_rooms'],autopct='%1.2f%%', colors=['darkgreen', 'teal','darkred'])
+    plot.pie(room_type['n_rooms'],autopct='%1.2f%%', colors=['darkcyan', 'steelblue','darkgreen','grey', 'pink'])
     plot.axis('equal')
     plot.legend(labels=room_type['room_type'],loc='best',fontsize='12')
     plot.title('Room-type Rental Distribution', fontsize='15',color='r')
