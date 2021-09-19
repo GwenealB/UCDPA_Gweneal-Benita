@@ -101,7 +101,7 @@ class AirbnbAnalyzer:
     plot.plot(top_reviewed['number_of_reviews'], marker='o', color='blue',linestyle='--')
     plot.ylabel('Reviews', fontsize='15')
     plot.xlabel('Location',fontsize='15')
-    plot.ylim((400,580))
+    plot.ylim((top_reviewed['number_of_reviews'].min()/2,top_reviewed['number_of_reviews'].max()+100))
     for ax in ax3.get_xticklabels():
       ax.set_rotation(50)
     plot.title('Most-Reviewed Rentals by location',fontsize='15')
