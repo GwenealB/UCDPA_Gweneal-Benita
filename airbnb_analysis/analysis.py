@@ -3,8 +3,10 @@ import pandas
 import matplotlib.pyplot as plot
 import seaborn as sns
 import numpy as np
+from PIL import Image
 
 class AirbnbAnalyzer:
+  NYC_IMAGE_LOCATION = 'data/New_York_City_.png'
   DEFAULT_SAVE = None
   def __init__(self, data: pandas.DataFrame, name="Airbnb 0000"):
     self.name = name
@@ -35,14 +37,12 @@ class AirbnbAnalyzer:
 
   def rent_dist_by_neighborhood(self, save_location:str = None):
     neighbourhood = self.data.groupby('neighbourhood_group')['neighbourhood'].count().reset_index()
-    fig,ax = plot.subplots(figsize=(12,8))
-    sns.barplot(x=neighbourhood[neighbourhood.columns[0]],
-    y=neighbourhood[neighbourhood.columns[1]],color='#004488',ax=ax)
-    sns.lineplot(x=neighbourhood[neighbourhood.columns[0]],y=neighbourhood[neighbourhood.columns[1]],color='r',marker='o',ax=ax)
-    plot.ylabel('Rentals', fontsize='15')
-    plot.xlabel('Borough',fontsize='15')
-    plot.title('Rental Distribution by Neighbourhood Group',fontsize='15')
-    plot.grid('x')
+    plot.figure(figsize=(10,8))
+    plot.figure(figsize=(10,8))
+    plot.pie(neighbourhood['neighbourhood'],autopct='%1.2f%%', colors=['darkcyan', 'steelblue','powderblue','grey', 'pink'])
+    plot.axis('equal')
+    plot.legend(labels=neighbourhood['neighbourhood_group'],loc='best',fontsize='12')
+    plot.title('Room Rental Distribution per neighborhood', fontsize='15',color='r')
     self.output(save_location)
     sns.set()
 
@@ -107,16 +107,11 @@ class AirbnbAnalyzer:
     plot.title('Most-Reviewed Rentals by location',fontsize='15')
     self.output(save_location)
     sns.set()
-
-  def temp(self):
-    upper_east = self.data[self.data['neighbourhood'] == 'Upper East Side']
-    ninetieth_percentile = np.quantile(upper_east['number_of_reviews'], 0.85)
-    upper_east = upper_east[upper_east['number_of_reviews'] >= ninetieth_percentile]
-    upper_east = upper_east.sort_values('price',ascending=True)
-    private_room = upper_east[upper_east['room_type'] == 'Private room'].reset_index()
-    entire_home = upper_east[upper_east['room_type'] == 'Entire home/apt'].reset_index()
-    shared_room = upper_east[upper_east['room_type'] == 'Shared room'].reset_index()
-    private_cheapest = private_room.loc[0,:].reset_index()
-    private_cheapest.rename(columns={'index':'data','0':'values'},inplace=True)
-    entire_cheapest = entire_home.loc[0,:].reset_index()
-    entire_cheapest.rename(columns={'index':'data','0':'values'},inplace=True)
+  def price_intensity_map(self, save_location:str = None):
+    plot.figure(figsize=(15, 13))
+    nyc_img = Image.open(self.NYC_IMAGE_LOCATION)
+    plot.imshow(nyc_img, zorder=0, extent=[-74.258, -73.7, 40.49,40.92])
+    ax=plot.gca()
+    new_df = self.data[self.data['price']<300]
+    new_df.plot(kind='scatter', x='longitude', y='latitude', c='price', ax=ax, cmap=plot.get_cmap('jet'), colorbar=True, alpha=0.4, zorder=5)
+    self.output(save_location)
