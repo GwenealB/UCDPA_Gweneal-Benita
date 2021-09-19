@@ -1,11 +1,11 @@
 import pandas, requests, sqlite3
 
 
+consumer_data_folder = 'data/'
 class CSV:
-  __folder = 'data/'
-  AB_NYC_2019 = __folder + 'AB_NYC_2019.csv'
-  AB_NYC_2020 = __folder + 'AB_NYC_2020.csv'
-  AB_NYC_2021 = __folder + 'AB_NYC_2021.csv'
+  AB_NYC_2019 = lambda: consumer_data_folder + 'AB_NYC_2019.csv'
+  AB_NYC_2020 = lambda: consumer_data_folder + 'AB_NYC_2020.csv'
+  AB_NYC_2021 = lambda: consumer_data_folder + 'AB_NYC_2021.csv'
   @staticmethod
   def consume(file:str):
     return pandas.read_csv(file)
@@ -32,12 +32,15 @@ class JSONApi:
 
 
 class SQLite:
+  DATABASE_LOCATION = 'database/sqlite.db'
   AB_NYC_2019 = 'AB_NYC_2019'
   AB_NYC_2020 = 'AB_NYC_2020'
   AB_NYC_2021 = 'AB_NYC_2021'
   @staticmethod
   def consume(table_name:str):
-    conn = sqlite3.connect('database/sqlite.db')
+    conn = sqlite3.connect(SQLite.DATABASE_LOCATION)
     data = pandas.read_sql_query(f'SELECT * FROM {table_name}', conn)
     conn.close()
     return data
+
+conn= lambda x: x
